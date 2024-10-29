@@ -7,6 +7,7 @@ mt19937_64 RNG(chrono::steady_clock::now().time_since_epoch().count());
 #define ff first
 #define pb push_back
 
+const int MOD = 998244353;
 
 vector<int> z_function(string s){
     int n = s.size();
@@ -31,47 +32,40 @@ vector<int> z_function(string s){
 int dx[4] = {0, 0, -1, 1};
 int dy[4] = {1, -1, 0, 0};
 
-const int MOD = 998244353;
+
+ll p[200200];
 
 void solve() {
     int n;
     cin >> n;
 
     vector<ll> a(n + 1);
-    for (int i = 1; i <= n; i++) {
+    ll mn = 0, sum = 0;
+    for (int i = 0; i < n; i++) {
         cin >> a[i];
+        sum += a[i];
+        mn = min(mn, sum);
     }
+    // use 2 only once
+    if(mn==0){
+        cout<<p[n]<<endl;
+        return;
+    }
+    sum = 0;
+    ll ans = 0, freq = 0; 
+    for(int i=0; i<n; i++){
+        sum += a[i];
 
-    map<ll, ll> dp; 
-
-    dp[0] = 1;
-
-    for (int i = 1; i <= n; i++) {
-        map<ll, ll> new_dp; 
-        for (auto& [c_val, ways] : dp) {
-            new_dp[c_val + a[i]] = (new_dp[c_val + a[i]] + ways) % MOD;
-
-            new_dp[abs(c_val + a[i])] = (new_dp[abs(c_val + a[i])] + ways) % MOD;
+        if(sum == mn){
+            ans = (ans + p[n-i+freq-1])%MOD;
         }
-        dp = new_dp; 
-    }
-    ll max_c = 0;
-    ll ways_to_achieve_max_c = 0;
-
-    for (auto& [c_val, ways] : dp) {
-        if (c_val > max_c) {
-            max_c = c_val;
-            ways_to_achieve_max_c = ways;
-        } else if (c_val == max_c) {
-            ways_to_achieve_max_c = (ways_to_achieve_max_c + ways) % MOD;
-        }
+        if(sum>=0) freq++;
     }
 
-    // Output the results
-    cout << ways_to_achieve_max_c << endl;
+    cout<<ans<<endl;
 } 
  
-int main() {
+signed main() {
     auto begin = std::chrono::high_resolution_clock::now();
     ios_base::sync_with_stdio(0);
     cin.tie(0);
@@ -79,9 +73,13 @@ int main() {
     // freopen("in",  "r", stdin);
     // freopen("out", "w", stdout);
     
-  //  cin >> t;
-    for(int i = 1; i <= t; i++) 
-    {
+    cin >> t;
+    p[0] = 1;
+
+    for(int i=1; i<200200; i++){
+        p[i] = (p[i-1]*2)%MOD;
+    }
+    for(int i = 1; i <= t; i++) {
         //cout << "Case #" << i << ": ";
         solve();
     }

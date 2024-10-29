@@ -2,7 +2,6 @@
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/trie_policy.hpp>
 #include <ext/pb_ds/tag_and_trait.hpp>
-#include <bitset>
 using namespace std;
 using namespace __gnu_pbds;
 #define ss second
@@ -33,7 +32,6 @@ typedef long long ll;
 #define No() cout << "NO\n"
 #define  MAXN 300005
 #define N_LMT 200200
-#define endl "\n"
 
 void debug(vi v){
 
@@ -65,7 +63,7 @@ ll binpow(ll a, ll b, ll m ) {
     }
     return res%m;
 }
-ll fac[2001];
+ll fac[2000001];
 
 ll inv(ll a){ return binpow(a,mod_10-2,mod_10); }
  
@@ -82,30 +80,60 @@ ll ncr(ll n, ll r){
     ans = (ans*inv(fac[n - r]))%mod_10;
     return ans%mod_10;
 } 
+struct Matrix{
+    vector<vector<ll>> v = vector<vector<ll>> (2, vector<ll> (2));
+    void operator *=(const Matrix& B){
+        vector<vector<ll>> mul(2, vector<ll>(2));
+        for(int i=0;i<2;i++){
+            for(int j=0;j<2;j++){
+                for(int k=0;k<2;k++){
+                    mul[i][k]+=(v[i][j]*B.v[j][k])%mod_10;
+                    mul[i][k]%=mod_10;
+                }
+            }
+        }
+        v=mul;
+    }
+};
+ 
+Matrix expo(Matrix A, ll m){
+    Matrix result;
+    for(int i=0;i<2;i++) result.v[i][i]=1;
+    while(m){
+        if(m%2!=0){
+            result*=A;
+        }
+        m/=2;
+        A*=A;
+    }
+    return result;
+}
 
 void solve() {
-    string s;
-    cin>>s;
 
-    ll ans = 0;
-    ll n = s.size();
-    ll m = n;
-    for(int i=0; i<n;i++){
-        if(s[i] == '0'){
-            continue;
-        }
-        else{
-            // cout<<m-1<<endl;
-            ans += fac[i];
-            ans = ans%mod_10;
-        }
+    ll n, k;
+    cin>>n>>k;
+    ll a = 1, b = 1;
+    n = n%mod_10;
+    if(k == 1){
+        cout<<n<<endl;
+        return;
     }
-    // ans -=1;
-    cout<<ans<<endl;
-    for(int i=1; i<=10; i++){
-        cout<<fac[i]<<" "<<i<<endl;
+    ll ind = 0;
+    
+    for(int i=2; ; i++){
+        ll curr = (a + b)%k;
+        if(curr == 0){
+            ind  = i+1;
+            break;
+        }   
+        a = b;
+        b = curr;
     }
-    cout<<endl;
+    // cout<<ind<<endl;
+    n = ind*n;
+    n = n%mod_10;
+    cout<<n<<endl;
 }
 
 signed main() {
@@ -115,18 +143,15 @@ signed main() {
     int t = 1;
     // freopen("in",  "r", stdin);
     // freopen("out", "w", stdout);
-    fac[1] = 0;
-    for(int i=2; i<=2000; i++){
-        fac[i] = (fac[i-1] + binpow(2, i-2, mod_10))%mod_10;
-    }
     
-    cin >> t;
-    for(int i = 1; i <= t; i++) {
+   cin >> t;
+    for(int i = 1; i <= t; i++) 
+    {
         //cout << "Case #" << i << ": ";
         solve();
     }
-    // auto end = std::chrono::high_resolution_clock::now();
-    // auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin);
+    auto end = std::chrono::high_resolution_clock::now();
+    auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin);
     // cerr << "Time measured: " << elapsed.count() * 1e-9 << " seconds.\n"; 
     return 0;
 }
