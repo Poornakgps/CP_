@@ -1,0 +1,9 @@
+Difference between structs and classes
+A class defaults its members to private, whereas a struct defaults its members to public.
+Structs inherit from other class types publicly and classes inherit privately.
+Access functions
+A trivial public member function whose job is to retrieve or change the value of a private member variable.
+2 types: getters and setters.
+Getters (accessors) are public member functions that return the value of a private member variable.
+Setters (mutators) are public member functions that set the value of a private member variable.
+Setters should be non-const, so they can modify the data members.

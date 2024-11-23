@@ -1,25 +1,25 @@
 class Solution {
 public:
-    long long dp[101][101][2]; // ith column, jth row filling (0 for not fill 1 for fill with black)
+    long long dp[101][101][2]; 
     long long g[100][100], n;
 
-    long long rec(int col, int fill, int curr){
+    long long rec(int col, int kth, int curr){
         if(col == n-1){
             if(curr == 1) return 0;
-
-            long long tot = fill? g[col][fill-1]: 0;
+            // 0 is prev block completely marked filled till kth row
+            long long tot = kth? g[col][kth-1]: 0;
             return tot;
         }
-        if(dp[col][fill][curr]!=-1){
-            return dp[col][fill][curr];
+        if(dp[col][kth][curr]!=-1){
+            return dp[col][kth][curr];
         }
         long long ans = rec(col+1, n, 0);
 
         if(curr == 0){
             for(int take = 1; take<=n; take++){
-                if(take<=fill){
-                    long long tot = g[col][fill-1];
-                    long long untake = fill-take;
+                if(take<=kth){
+                    long long tot = g[col][kth-1];
+                    long long untake = kth-take;
                     if(untake)
                         tot -= g[col][untake-1];
                     long long val = tot + rec(col+1, untake, 0);
@@ -30,20 +30,19 @@ public:
                     long long val = g[col][take-1]+ rec(col+1, take, 1);
                     ans = max(ans, val);
                 }
-                
             }
         }
         else{
-            for( int take = 1 ; fill + take <= n ; take++ ){
-                long long d = fill + take;
+            for( int take = 1 ; kth+ take <= n ; take++ ){
+                long long d = kth+ take;
                 long long tot = g[col][d-1] ;
-                if( fill )
-                tot -= g[col][fill-1] ;
+                if( kth)
+                tot -= g[col][kth-1] ;
                 long long val = tot + rec(col+1,d,1);
                 ans = max(ans,val);
             } 
         }
-        return dp[col][fill][curr] = ans;
+        return dp[col][kth][curr] = ans;
     }
     long long maximumScore(vector<vector<int>>& grid) {
         n = grid.size();

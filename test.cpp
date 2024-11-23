@@ -82,30 +82,60 @@ ll ncr(ll n, ll r){
     ans = (ans*inv(fac[n - r]))%mod_10;
     return ans%mod_10;
 } 
+int n, m, q;
+vector<ll> v;
 
-void solve() {
-    string s;
-    cin>>s;
+map<ll, map<vector<vector<ll>>, ll>> dp;
 
+ll rec(int ind, vector<vector<ll>> &h) {
+    if (ind == q) {
+        return 0;
+    }
+    // shrink
+
+    if (dp[ind].count(h) != 0) {
+        return dp[ind][h];
+    }
+    int mn=1e5;
     ll ans = 0;
-    ll n = s.size();
-    ll m = n;
-    for(int i=0; i<n;i++){
-        if(s[i] == '0'){
+    for(int i=0; i<n; i++){
+        mn = min(mn, h[i]);
+    }
+    ans= 10*mn;
+    for(int i=0; i<m; i++){
+        h[i] -= mn;
+    }
+    
+    // vertically on each column and taking max
+    for(int i=0; i<m; i++){
+        
+        if(v[i] + h[i]> n){
             continue;
         }
-        else{
-            // cout<<m-1<<endl;
-            ans += fac[i];
-            ans = ans%mod_10;
-        }
+        h[i] += v[i];
+        ans = max(ans, rec(ind+1, h));
     }
-    // ans -=1;
-    cout<<ans<<endl;
-    for(int i=1; i<=10; i++){
-        cout<<fac[i]<<" "<<i<<endl;
+
+    // horizontally
+
+    return dp[i][h] = ans;
+}
+void solve() {
+    
+    cin >> n >> m;
+    cin>>q;
+
+    for(int i=0; i<q; i++){
+        ll a, b, c;
+        cin>>a>>b>>c;
+        v.pb(a), v.pb(b), v.pb(c);
     }
-    cout<<endl;
+    q = v.size();
+    dp.clear();
+    vector<<ll>> h(n, vector<ll>(m, 0));
+
+    cout<<rec(0,h);
+
 }
 
 signed main() {

@@ -1,0 +1,14 @@
+Primary Components (a.k.a. 4 pillars)
+Encapsulation (data hiding) : Bundling of data (attributes) and the methods (functions or procedures) that operate on the data into a single unit, known as a class.
+
+It helps in organizing code by hiding the details of how an object works, exposing only the necessary functionalities. It also enhances security by preventing direct access to an object's internal state.
+Inheritance : Mechanism that allows a subclass or derived class to inherit attributes and behaviors from a base class or parent class.
+
+Promotes code reusability and establishes a relationship between classes.
+Polymorphism - Allows a single function or method to operate on different types of data or objects.
+
+There are two types of polymorphism: compile-time (method overloading) and runtime (method overriding).
+It allows the use of a common interface for different types of objects, enabling the development of more generic and flexible algorithms.
+Abstraction - Involves simplifying complex systems by modeling classes based on the essential features and ignoring the irrelevant details.
+
+It allows us to create abstract classes and interfaces, defining the structure and contract without specifying the implementation details.
